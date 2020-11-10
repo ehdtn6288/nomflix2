@@ -14,10 +14,11 @@ const Title = styled.h1`
 `;
 
 const Grid = styled.div`
+  margin-top: 30px;
   display: grid;
   grid-gap: 25px;
   align-content: center;
-  justify-content: center;
+  justify-content: space-between;
   grid-template-columns: repeat(auto-fill, 150px);
 `;
 

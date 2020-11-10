@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import Poster from "../Components/Poster";
-import { Link } from "react-router-dom";
 
 const Container = styled.div`
   background-color: rgb(0, 0, 0, 0.5);

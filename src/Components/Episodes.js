@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import Poster from "../Components/Poster";
 
 const Container = styled.div`
   background-color: rgb(0, 0, 0, 0.5);
@@ -8,20 +7,8 @@ const Container = styled.div`
   border-radius: 10px;
 `;
 
-const InfoBox = styled.div`
-  display: flex;
-`;
-const CollectionPoster = styled.img`
-  width: 130px;
-`;
-const Info = styled.div`
-  margin-left: 30px;
-`;
 const Name = styled.div`
   font-size: 22px;
-`;
-const Overview = styled.div`
-  margin-top: 15px;
 `;
 
 const PartsBox = styled.div`
@@ -59,9 +46,6 @@ const PartTitle = styled.div`
   font-size: 12px;
   margin-top: 5px;
 `;
-const Posterk = styled(Poster)`
-  width: 100px;
-`;
 
 const Episodes = ({
   location: {
@@ -85,17 +69,6 @@ const Episodes = ({
             <PartTitle>{episode.name}</PartTitle>
           </Part>
         ))}
-        {/* {data.episodes.map((episode, index) => (
-          <Poster
-            key={index}
-            title={episode.name}
-            isMovie={true}
-            id={episode.id}
-            imgUrl={episode.still_path}
-            rating={episode.vote_average}
-            year={episode.air_date}
-          />
-        ))} */}
       </PartsBox>
     </Container>
   );
