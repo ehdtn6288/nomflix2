@@ -39,6 +39,7 @@ const SLink = styled(Link)`
 `;
 
 export default withRouter(({ location: { pathname } }) => {
+  //Header 컴포넌트는 Route로 불러온 컴포넌트가 아니므로, withRouter 를 통해 location, history, match 등에 접근 가능!
   console.log(pathname);
   return (
     <Header>

@@ -22,8 +22,8 @@ export default () => {
         <Route path="/search" component={Search} />
         <Route path="/detail/popular" component={() => "Popular"} />
         <Route path="/tv" component={TV} />
-        <Route path="/movie/:id/:info" component={Detail} />
-        <Route path="/show/:id/:info" component={Detail} />
+        <Route path="/movie/:id/:info" exact component={Detail} />
+        <Route path="/show/:id/:info" exact component={Detail} />
         <Redirect from="*" to="/" />
       </Switch>
     </Router>

@@ -8,7 +8,7 @@ ${reset}
 }
 a{
     text-decoration:none;
-    color:inherit
+    color:inherit;
 }
 body{
     padding-top: 70px;

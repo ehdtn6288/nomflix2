@@ -28,4 +28,7 @@ export const TVApi = {
     api.get(`tv/${id}`, { params: { append_to_response: "videos,credits" } }),
   search: (term) =>
     api.get(`search/tv`, { params: { query: encodeURIComponent(term) } }),
+  season: (id, seasonNum) => api.get(`tv/${id}/season/${seasonNum}`),
 };
+
+export const GetCollection = (id) => api.get(`collection/${id}`);

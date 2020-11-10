@@ -34,10 +34,15 @@ const Year = styled.span`
   font-size: 10px;
   opacity: 0.6;
 `;
+const SLink = styled(Link)`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+`;
 
 const Poster = ({ title, imgUrl, rating, year, isMovie = false, id }) => {
   return (
-    <Link to={isMovie ? `/movie/${id}` : `/show/${id}`}>
+    <SLink to={isMovie ? `/movie/${id}` : `/show/${id}`}>
       <ImgContainer>
         <Img
           src={
@@ -58,7 +63,7 @@ const Poster = ({ title, imgUrl, rating, year, isMovie = false, id }) => {
         {title && title.length > 17 ? `${title.slice(0, 17)}...` : title}
       </Title>
       <Year>{year ? year.slice(0, 4) : ""}</Year>
-    </Link>
+    </SLink>
   );
 };
 

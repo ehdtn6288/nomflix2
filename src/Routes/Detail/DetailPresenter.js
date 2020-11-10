@@ -1,7 +1,10 @@
 import React from "react";
 import Loading from "../../Components/Loading";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
+import Collections from "../../Components/Collections";
+import Episodes from "../../Components/Episodes";
+import Seasons from "../../Components/Seasons";
 
 const Container = styled.div`
   width: 100%;
@@ -27,13 +30,15 @@ const BackDrop = styled.div`
 const Content = styled.div`
   width: 100%;
   height: 100%;
+  /* display: flex; */
   display: grid;
-  grid-template-columns: repeat(3, 29% 50% 36%);
+  grid-template-columns: minmax(450px, 29%) minmax(860px, 60%);
+  /* grid-template-rows: calc(100vh - 180px); */
 `;
-const Cover = styled.div`
+const Cover = styled.img`
   background-image: url(${(props) => props.imgUrl});
-  background-position: center center;
-  background-size: cover;
+  /* background-position: center center;
+  background-size: cover; */
   border-radius: 5px;
   width: 100%;
   height: 100%;
@@ -47,6 +52,16 @@ const Data = styled.div`
 const Title = styled.h1`
   font-size: 34px;
   margin-bottom: 7px;
+  display: flex;
+  /* align-items: baseline; */
+`;
+const ImDbLink = styled.a`
+  padding-top: 3px;
+  margin-left: 10px;
+  border-radius: 10px;
+`;
+const ImDbLogo = styled.img`
+  width: 50px;
 `;
 const Information = styled.div`
   display: flex;
@@ -61,7 +76,7 @@ const Genres = styled.ul`
 `;
 const OverView = styled.div`
   line-height: 1.4;
-
+  margin-bottom: 15px;
   margin-top: 15px;
 `;
 const InfoBar = styled.div`
@@ -182,7 +197,123 @@ const Right = styled.button`
   }
 `;
 
-const DetailPresenter = ({ result, loading, info, isMovie, slider }) => {
+const CompanyBox = styled.div`
+  width: 100%;
+  height: initial;
+  max-height: 390px;
+  background-color: rgb(80, 80, 80, 0.4);
+  border-radius: 5px;
+  padding: 20px;
+  overflow: auto;
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 5px;
+  }
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(47, 54, 64, 1);
+    border-radius: 5px;
+  }
+`;
+const Company = styled.div`
+  display: grid;
+  grid-template-columns: 40% auto;
+  align-items: center;
+  padding: 10px;
+`;
+const CompanyName = styled.span``;
+const CompanyLogo = styled.img`
+  width: 80px;
+  margin-left: 15px;
+`;
+const VideoBox = styled.div`
+  background-color: rgb(10, 10, 10, 0.9);
+  padding: 25px;
+  border-radius: 7px;
+  display: grid;
+  grid-template-columns: 600px 1fr;
+`;
+const VideoSlide = styled.div`
+  width: 600px;
+
+  overflow: hidden;
+`;
+const VideoList = styled.div`
+  width: ${(props) => `${props.videoLength * 600}px`};
+  transform: ${(props) =>
+    props.videoIndex ? `translateX(-${props.videoIndex * 600}px)` : ""};
+
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+`;
+const Video = styled.iframe`
+  width: 600px;
+  height: 350px;
+`;
+const VideoIndexBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  overflow: auto;
+  max-height: 400px;
+  scrollbar-color: rgb(47, 54, 64, 1) rgb(220, 221, 225, 0.3);
+  scrollbar-width: thin;
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 5px;
+  }
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(47, 54, 64, 1);
+    border-radius: 5px;
+  }
+  /* Handle on hover */
+`;
+const VideoIndex = styled.div`
+  color: white;
+  font-size: 0.8em;
+  border-radius: 5px;
+
+  border: none;
+  outline: none;
+
+  padding: 10px;
+  background-color: ${(props) =>
+    props.isIndex ? "rgb(47, 54, 64, 1)" : "rgb(220, 221, 225,0.2)"};
+  margin-right: 5px;
+  cursor: pointer;
+
+  :not(:last-child) {
+    margin-bottom: 18px;
+  }
+  :hover {
+    background-color: rgb(47, 54, 64, 0.8);
+  }
+  /* box-shadow: 0px 10px 13px -7px #000000,
+    0px 10px 30px 5px rgba(160, 160, 160, 0.21); */
+  span {
+    display: none;
+  }
+`;
+const DetailPresenter = ({
+  result,
+  collection,
+  episodes,
+  loading,
+  info,
+  isMovie,
+  slider,
+  VideoSlider,
+  videoIndex,
+}) => {
+  console.log(episodes, "!!!!!!!!!!!");
   return loading ? (
     <Loading />
   ) : (
@@ -196,14 +327,23 @@ const DetailPresenter = ({ result, loading, info, isMovie, slider }) => {
       />
       <Content>
         <Cover
-          imgUrl={
+          src={
             result.poster_path
               ? `https://image.tmdb.org/t/p/w500/${result.poster_path}`
               : require("../../assets/noPosterSmall.png")
           }
         ></Cover>
         <Data>
-          <Title>{result.title ? result.title : result.name}</Title>
+          <Title>
+            {result.title ? result.title : result.name}
+            <ImDbLink
+              href={`https://www.imdb.com/title/${result.imdb_id}`}
+              target="_blank"
+            >
+              <ImDbLogo src={require("../../assets/imdb.logo.png")} />
+            </ImDbLink>
+          </Title>
+
           <Information>
             <Year>
               {result.release_date
@@ -227,8 +367,12 @@ const DetailPresenter = ({ result, loading, info, isMovie, slider }) => {
                   ))
                 : ""}
             </Genres>
+            <Divider>|</Divider>
+            <span>
+              {result.origin_country ||
+                result.production_countries[0].iso_3166_1}
+            </span>
           </Information>
-          <OverView>{result.overview}</OverView>
 
           <InfoBar>
             <MenuLink
@@ -244,44 +388,178 @@ const DetailPresenter = ({ result, loading, info, isMovie, slider }) => {
               <span>Company</span>
             </MenuLink>
             <MenuLink
-              to={`/${isMovie ? "movie" : "show"}/${result.id}/actors`}
-              current={info === "actors"}
+              to={`/${isMovie ? "movie" : "show"}/${result.id}/trailers`}
+              current={info === "trailers"}
             >
-              <span>Actors</span>
+              <span>Trailers</span>
             </MenuLink>
+            {collection && (
+              <MenuLink
+                to={{
+                  pathname: `/${isMovie ? "movie" : "show"}/${
+                    result.id
+                  }/collections`,
+                  state: { collection: collection.data },
+                }}
+                current={info === "collections"}
+              >
+                <span>Collections</span>
+              </MenuLink>
+            )}
+            {episodes && episodes.length > 0 && (
+              <MenuLink
+                to={{
+                  pathname: `/${isMovie ? "movie" : "show"}/${
+                    result.id
+                  }/episodes`,
+                  state: { episodes },
+                }}
+                current={info === "episodes"}
+              >
+                <span>Episodes</span>
+              </MenuLink>
+            )}
+            {result.seasons && result.seasons.length > 0 && (
+              <MenuLink
+                to={{
+                  pathname: `/${isMovie ? "movie" : "show"}/${
+                    result.id
+                  }/seasons`,
+                  state: { seasons: result.seasons },
+                }}
+                current={info === "seasons"}
+              >
+                <span>Seasons</span>
+              </MenuLink>
+            )}
           </InfoBar>
-
-          {info === undefined && (
-            <BgBox>
-              <SlideBox>
-                <Left onClick={slider.Left}> &lt; </Left>
-                <Right onClick={slider.Right}> &gt; </Right>
-                <CastingBox
-                  className="slide"
-                  width={(result.credits.cast.length + 1) * 100}
-                >
-                  {result.credits.cast.map((cast, index) => (
-                    <Profile key={index}>
-                      <ActorImage
-                        imgUrl={
-                          cast.profile_path
-                            ? `https://image.tmdb.org/t/p/w500/${cast.profile_path}`
-                            : require("../../assets/noPosterSmall.png")
-                        }
-                      ></ActorImage>
-                      <ActorName>
-                        <div>{cast.character}</div>
-                        <div>({cast.name})</div>
-                      </ActorName>
-                    </Profile>
-                  ))}
-                </CastingBox>
-              </SlideBox>
-            </BgBox>
+          {info === "collections" && (
+            <Route
+              path={`/${isMovie ? "movie" : "show"}/:id/:info`}
+              component={Collections}
+              exact
+            />
           )}
 
-          {info && info === "company" && <div>Company</div>}
-          {info && info === "actors" && <div>Actors</div>}
+          {info === "episodes" && (
+            <Route
+              path={`/${isMovie ? "movie" : "show"}/:id/:info`}
+              component={Episodes}
+              exact
+            />
+          )}
+          {info === "seasons" && (
+            <Route
+              path={`/${isMovie ? "movie" : "show"}/:id/:info`}
+              component={Seasons}
+              exact
+            />
+          )}
+
+          {info === undefined && (
+            <>
+              <OverView>{result.overview}</OverView>
+              <BgBox>
+                <SlideBox>
+                  <Left onClick={slider.Left}> &lt; </Left>
+                  <Right onClick={slider.Right}> &gt; </Right>
+                  <CastingBox
+                    className="slide"
+                    id="slid"
+                    width={(result.credits.cast.length + 1) * 100}
+                  >
+                    {result.credits.cast.length > 0 ? (
+                      result.credits.cast.map((cast, index) => (
+                        <Profile key={index}>
+                          <ActorImage
+                            imgUrl={
+                              cast.profile_path
+                                ? `https://image.tmdb.org/t/p/w500/${cast.profile_path}`
+                                : require("../../assets/noPosterSmall.png")
+                            }
+                          ></ActorImage>
+                          <ActorName>
+                            <div>{cast.character}</div>
+                            <div>({cast.name})</div>
+                          </ActorName>
+                        </Profile>
+                      ))
+                    ) : (
+                      <span>No Information.</span>
+                    )}
+                  </CastingBox>
+                </SlideBox>
+              </BgBox>
+            </>
+          )}
+
+          {info &&
+            info === "company" &&
+            result.production_companies &&
+            result.production_companies.length > 0 && (
+              <CompanyBox>
+                {result.production_companies.map((company) => (
+                  <Company>
+                    <CompanyName>{company.name}</CompanyName>
+                    {company.logo_path && (
+                      <CompanyLogo
+                        src={`https://image.tmdb.org/t/p/w500/${company.logo_path}`}
+                      />
+                    )}
+                  </Company>
+                ))}
+              </CompanyBox>
+            )}
+
+          {info && info === "trailers" && (
+            <VideoBox>
+              <VideoSlide id="videoList">
+                <VideoList
+                  width={result.videos.results.length * 800}
+                  videoLength={result.videos.results.length}
+                  videoIndex={videoIndex}
+                >
+                  {result.videos.results.map((video, index) => (
+                    <Video
+                      src={`https://www.youtube.com/embed/${video.key}`}
+                      allowFullScreen
+                      frameBorder="0"
+                      key={index}
+                    ></Video>
+                  ))}
+                </VideoList>
+              </VideoSlide>
+              <VideoIndexBox>
+                {result.videos.results.length > 0 ? (
+                  result.videos.results.map((video, index) => (
+                    <VideoIndex
+                      onClick={VideoSlider}
+                      key={index}
+                      isIndex={videoIndex === index}
+                    >
+                      <span>{`${index + 1}`}</span>
+                      {/* {video.name} */}
+                      {video.name.includes("Official Trailer")
+                        ? `${
+                            result.title ? result.title : result.name
+                          } | Official Trailer`
+                        : video.name.includes("Trailer")
+                        ? `${
+                            result.title ? result.title : result.name
+                          } | Trailer`
+                        : video.name.includes("Official Teaser")
+                        ? `${
+                            result.title ? result.title : result.name
+                          } | Official Teaser`
+                        : video.name}
+                    </VideoIndex>
+                  ))
+                ) : (
+                  <span>No Trailer.</span>
+                )}
+              </VideoIndexBox>
+            </VideoBox>
+          )}
         </Data>
       </Content>
     </Container>
