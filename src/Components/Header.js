@@ -15,6 +15,12 @@ const List = styled.ul`
   align-items: center;
   height: 60px;
 `;
+const Logo = styled.li`
+  color: rgb(229, 80, 57);
+  font-size: 20px;
+  padding: 0 20px;
+  padding-top: 5px;
+`;
 const Item = styled.li`
   padding-top: 6px;
   width: 90px;
@@ -44,6 +50,9 @@ export default withRouter(({ location: { pathname } }) => {
   return (
     <Header>
       <List>
+        <Link to="/">
+          <Logo>EOMFLIX</Logo>
+        </Link>
         <Item current={pathname === "/"}>
           <SLink to="/">Home</SLink>
         </Item>

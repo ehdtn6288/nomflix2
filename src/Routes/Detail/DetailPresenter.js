@@ -406,7 +406,7 @@ const DetailPresenter = ({
                 <span>Collections</span>
               </MenuLink>
             )}
-            {episodes && episodes.length > 0 && (
+            {episodes && episodes.episodes.length > 0 && (
               <MenuLink
                 to={{
                   pathname: `/${isMovie ? "movie" : "show"}/${

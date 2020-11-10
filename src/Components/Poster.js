@@ -6,8 +6,7 @@ const Img = styled.img`
   width: 100%;
   border-radius: 5px;
   box-shadow: 0px 10px 13px -7px #000000,
-    -19px -50px 22px -30px rgba(0, 0, 0, 0),
-    0px 0px 50px 0px rgba(255, 255, 255, 0.2);
+    -19px -50px 22px -30px rgba(0, 0, 0, 0), 0px 0px 50px 0px rgba(0, 0, 0, 0.3);
 `;
 
 const Rating = styled.span`
